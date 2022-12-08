@@ -1,12 +1,9 @@
-from flask import Flask
+from flask import Flask, session
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
-    app.run()
+import controllers.issues
+import controllers.index
+import controllers.new_issue
+import controllers.edit_issue

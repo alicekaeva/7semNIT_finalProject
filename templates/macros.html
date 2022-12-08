@@ -1,0 +1,71 @@
+{% macro render_issues(issues, len) %}
+    {% set n = len(issues) %}
+    {% for i in range(n) %}
+        <form action="{{ url_for('issues') }}" method="get">
+            <div class="dropdown dropdown-bottom">
+                <input hidden type="text" name="editable" value="{{ issues.loc[i, "issue_name"] }}">
+                <label tabindex="0" class="link link-hover text-lg ml-6">{{ issues.loc[i, "issue_name"] }}</label>
+                <div class="dropdown-content menu p-2 shadow bg-base-100 rounded-box overflow-x-auto">
+                    <table class="table w-full">
+                        <!-- head -->
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Job</th>
+                            <th>Favorite Color</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- row 1 -->
+                        <tr>
+                            <th>1</th>
+                            <td>Cy Ganderton</td>
+                            <td>Quality Control Specialist</td>
+                            <td>Blue</td>
+                        </tr>
+                        <!-- row 2 -->
+                        <tr>
+                            <th>2</th>
+                            <td>Hart Hagerty</td>
+                            <td>Desktop Support Technician</td>
+                            <td>Purple</td>
+                        </tr>
+                        <!-- row 3 -->
+                        <tr>
+                            <th>3</th>
+                            <td>Brice Swyre</td>
+                            <td>Tax Accountant</td>
+                            <td>Red</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-outline btn-xs ml-2">Редактировать</button>
+        </form>
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_genres(combo_box, genre_id, len) %}
+    <select name="genre" class="select w-full max-w-xs" required>
+        {% set n = len(combo_box) %}
+        {% for i in range(n) %}
+            {% set id_r = combo_box.loc[i, "genre_id"] %}
+            {% if id_r == genre_id %}
+                <option selected value={{ id_r }}>
+                    {% else %}
+                <option value={{ id_r }}>
+            {% endif %}
+        {{ combo_box.loc[i, "genre_name"] }}
+        </option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+{% macro render_works(combo_box, len) %}
+    {% set n = len(combo_box) %}
+    {% for i in range(n) %}
+        <input type="checkbox" value="{{ combo_box.loc[i, "work_name"] }}" class="checkbox"/>
+    {% endfor %}
+{% endmacro %}

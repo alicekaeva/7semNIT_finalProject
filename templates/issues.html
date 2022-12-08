@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+<head>
+    <meta charset="UTF-8">
+    <title>Выпуски</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.42.1/dist/full.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% import "macros.html" as macros %}
+</head>
+<body>
+<div class="navbar bg-base-100">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-ghost btn-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                </svg>
+            </label>
+            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                <li><a href={{ url_for("index") }}>Активные работы</a></li>
+                <li><a href={{ url_for("issues") }}>Выпуски</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="navbar-center">
+        <a href={{ url_for("issues") }} class="btn btn-ghost normal-case text-xl">Выпуски</a>
+    </div>
+    <div class="navbar-end">
+        <form action="{{ url_for('new_issue') }}" method="get">
+            <button type="submit" class="btn btn-outline btn-xs ml-2">Добавить выпуск</button>
+        </form>
+    </div>
+</div>
+{{ macros.render_issues(issue,len) }}
+</body>
+</html>
