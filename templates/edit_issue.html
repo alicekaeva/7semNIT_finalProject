@@ -2,7 +2,7 @@
 <html lang="en" data-theme="cupcake">
 <head>
     <meta charset="UTF-8">
-    <title>Выпуски</title>
+    <title>{{ f_name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.42.1/dist/full.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
     {% import "macros.html" as macros %}
@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="navbar-center">
-        <a class="btn btn-ghost normal-case text-xl">{{ f_name }}</a>
+        <a href={{ url_for("issues") }} class="btn btn-ghost normal-case text-xl">{{ f_name }}</a>
     </div>
     <div class="navbar-end">
     </div>
@@ -42,40 +42,7 @@
     </div>
 </div>
 <div class="overflow-x-auto mt-2">
-    <table class="table w-full">
-        <!-- head -->
-        <thead>
-        <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Job</th>
-            <th>Favorite Color</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- row 1 -->
-        <tr>
-            <th>1</th>
-            <td>Cy Ganderton</td>
-            <td>Quality Control Specialist</td>
-            <td>Blue</td>
-        </tr>
-        <!-- row 2 -->
-        <tr>
-            <th>2</th>
-            <td>Hart Hagerty</td>
-            <td>Desktop Support Technician</td>
-            <td>Purple</td>
-        </tr>
-        <!-- row 3 -->
-        <tr>
-            <th>3</th>
-            <td>Brice Swyre</td>
-            <td>Tax Accountant</td>
-            <td>Red</td>
-        </tr>
-        </tbody>
-    </table>
+    {{ macros.render_edit_issue(table, 'issue_article_work_id', len) }}
 </div>
 </body>
 </html>

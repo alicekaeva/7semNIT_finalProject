@@ -1,14 +1,17 @@
 from app import app
 from flask import render_template, request, session
 from utils import get_db_connection
-#from models.issues_model import
+from models.index_model import show_cards, get_workers
 
 
 @app.route('/', methods=['get'])
 def index():
-    #conn = get_db_connection()
+    conn = get_db_connection()
+    df_table = show_cards(conn)
 
     html = render_template(
-        'index.html'
+        'index.html',
+        table=df_table,
+        len=len
     )
     return html

@@ -46,6 +46,16 @@
         </div>
     </div>
 </div>
-{{ macros.render_issues(issue,len) }}
+<form action="{{ url_for('issues') }}" method="get">
+    {{ macros.render_issues(issue, id, len) }}
+    <button type="submit" class="btn btn-outline btn-xl ml-2">Найти</button>
+</form>
+<div class="overflow-x-auto mt-2">
+    <form action="{{ url_for('issues') }}" method="post">
+        {{ macros.render_secret(issue, id, len) }}
+        <button type="submit" class="btn btn-outline btn-xs float-right mb-2 mr-2">Редактировать выпуск</button>
+    </form>
+    {{ macros.render_edit_issue(table, 'issue_article_work_id', len) }}
+</div>
 </body>
 </html>

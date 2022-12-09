@@ -1,50 +1,28 @@
-{% macro render_issues(issues, len) %}
-    {% set n = len(issues) %}
+{% macro render_issues(combo_box, issue_id, len) %}
+    <select name="issue" class="select select-bordered w-full max-w-xs" required>
+        {% set n = len(combo_box) %}
+        {% for i in range(n) %}
+            {% set id_r = combo_box.loc[i, "issue_id"] %}
+            {% if id_r == issue_id %}
+                <option selected value={{ id_r }}>
+                    {% else %}
+                <option value={{ id_r }}>
+            {% endif %}
+        {{ combo_box.loc[i, "issue_name"] }}
+        </option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+{% macro render_secret(combo_box, issue_id, len) %}
+    {% set n = len(combo_box) %}
     {% for i in range(n) %}
-        <form action="{{ url_for('issues') }}" method="get">
-            <div class="dropdown dropdown-bottom">
-                <input hidden type="text" name="editable" value="{{ issues.loc[i, "issue_name"] }}">
-                <input hidden type="text" name="editable_id" value="{{ issues.loc[i, "issue_id"] }}">
-                <label tabindex="0" class="link link-hover text-lg ml-6">{{ issues.loc[i, "issue_name"] }}</label>
-                <div class="dropdown-content menu p-2 shadow bg-base-100 rounded-box overflow-x-auto">
-                    <table class="table w-full">
-                        <!-- head -->
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Job</th>
-                            <th>Favorite Color</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- row 1 -->
-                        <tr>
-                            <th>1</th>
-                            <td>Cy Ganderton</td>
-                            <td>Quality Control Specialist</td>
-                            <td>Blue</td>
-                        </tr>
-                        <!-- row 2 -->
-                        <tr>
-                            <th>2</th>
-                            <td>Hart Hagerty</td>
-                            <td>Desktop Support Technician</td>
-                            <td>Purple</td>
-                        </tr>
-                        <!-- row 3 -->
-                        <tr>
-                            <th>3</th>
-                            <td>Brice Swyre</td>
-                            <td>Tax Accountant</td>
-                            <td>Red</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-outline btn-xs ml-2">Редактировать</button>
-        </form>
+        {% set id_r = combo_box.loc[i, "issue_id"] %}
+        {% if id_r == issue_id %}
+            <input hidden type="text" name="editable" value="{{ combo_box.loc[i, "issue_name"] }}">
+            <input hidden type="text" name="editable_id" value="{{ combo_box.loc[i, "issue_id"] }}">
+        {% endif %}
+        </option>
     {% endfor %}
 {% endmacro %}
 
@@ -69,4 +47,56 @@
             </label>
         {% endfor %}
     </div>
+{% endmacro %}
+
+{% macro render_edit_issue(relation, id, len) %}
+    <table class="table w-full">
+        <thead>
+        <tr>
+            {% set n = len(relation) %}
+            {% for name in relation.dtypes.index %}
+                {% if name != id %}
+                    <th>{{ name }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in range(n) %}
+            <tr>
+                {% for name in relation.dtypes.index %}
+                    {% if name != id %}
+                        <td>
+                            {{ relation.loc[i, name] }}
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% macro render_cards(card, id, len) %}
+    {% set n = len(card) %}
+    {% for i in range(n) %}
+        <form action="{{ url_for('index') }}" method="post">
+            <div class="card w-70 bg-base-100 m-5 shadow-xl">
+                <div class="card-body">
+                    {% for name in card.dtypes.index %}
+                        {% if name != id %}
+                            <p>{{ name }}: <b>{{ card.loc[i, name] }}</b></p>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-outline btn-xs mr-2">
+                            {% if card.loc[i, 'Начал'] == None %}Взять
+                            {% elif card.loc[i, 'Закончил'] == None and card.loc[i, 'Начал'] != None %} Закончить
+                            {% elif card.loc[i, 'Закончил'] != None and card.loc[i, 'Начал'] != None and card.loc[i, 'Проверено'] == 0 %}
+                            {% endif %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endfor %}
 {% endmacro %}

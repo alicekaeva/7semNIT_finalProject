@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, request, session
 from utils import get_db_connection
-from models.edit_issue_model import get_work, get_genre, add_article, add_issue_article, add_issue_article_work
+from models.edit_issue_model import get_work, get_genre, add_article, add_issue_article, add_issue_article_work, show_edit_table
 
 
 @app.route('/edit_issue', methods=['get', 'post'])
@@ -20,11 +20,14 @@ def edit_issue():
         issue_article_id = add_issue_article(edit_issue_id, article_id, conn)
         add_issue_article_work(issue_article_id, works_ids, conn)
 
+    df_table = show_edit_table(edit_issue_id, conn)
+
     html = render_template(
         'edit_issue.html',
         f_name=edit_issue_name,
         len=len,
         works = df_works,
-        genres=df_genres
+        genres=df_genres,
+        table=df_table
     )
     return html
