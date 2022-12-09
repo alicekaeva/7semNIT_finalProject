@@ -14,6 +14,7 @@ def issues():
         add_issue(new_issue, new_date, conn)
     elif request.values.get('editable'):
         session['editable'] = request.values.get('editable')
+        session['editable_id'] = int(request.values.get('editable_id'))
         return redirect(url_for('edit_issue'))
 
     df_issues = get_issues(conn)

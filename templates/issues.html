@@ -27,9 +27,23 @@
         <a href={{ url_for("issues") }} class="btn btn-ghost normal-case text-xl">Выпуски</a>
     </div>
     <div class="navbar-end">
-        <form action="{{ url_for('new_issue') }}" method="get">
-            <button type="submit" class="btn btn-outline btn-xs ml-2">Добавить выпуск</button>
-        </form>
+        <div class="dropdown dropdown-left">
+            <label tabindex="0" class="btn btn-outline btn-xs ml-6">Добавить выпуск</label>
+            <div tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box ml-6 w-70">
+                <form action="{{ url_for('issues') }}" method="post">
+                    <input type="text" placeholder="Название"
+                           class="input input-bordered w-full max-w-xs mb-3"
+                           name="new_issue" required/>
+                    <br>
+                    <input type="date" placeholder="Введите дедлайн выпуска"
+                           class="input input-bordered w-full max-w-xs mb-3"
+                           name="new_date"
+                           required/>
+                    <br>
+                    <button type="submit" class="btn btn-outline btn-xs mr-2">Добавить</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {{ macros.render_issues(issue,len) }}
