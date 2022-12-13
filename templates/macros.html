@@ -55,7 +55,7 @@
         <tr>
             {% set n = len(relation) %}
             {% for name in relation.dtypes.index %}
-                {% if name != id %}
+                {% if name not in id %}
                     <th>{{ name }}</th>
                 {% endif %}
             {% endfor %}
@@ -65,7 +65,7 @@
         {% for i in range(n) %}
             <tr>
                 {% for name in relation.dtypes.index %}
-                    {% if name != id %}
+                    {% if name not in id %}
                         <td>
                             {{ relation.loc[i, name] }}
                         </td>
@@ -77,26 +77,98 @@
     </table>
 {% endmacro %}
 
-{% macro render_cards(card, id, len) %}
+{% macro render_worker(workers, len) %}
+    <select name="worker" class="select select-bordered select-sm w-full max-w-xs mb-2" required>
+        <option disabled selected>Работник</option>
+        {% set n = len(workers) %}
+        {% for i in range(n) %}
+            <option value={{ workers.loc[i, "worker_id"] }}>
+                {{ workers.loc[i, "worker_name"] }}
+            </option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+{% macro render_res(res, len) %}
+    <select name="res" class="select select-bordered select-sm w-full max-w-xs" required>
+        <option disabled selected>Ответственный</option>
+        {% set n = len(res) %}
+        {% for i in range(n) %}
+            <option value={{ res.loc[i, "worker_id"] }}>
+                {{ res.loc[i, "worker_name"] }}
+            </option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+{% macro render_cards(card, w, r, id, len) %}
     {% set n = len(card) %}
     {% for i in range(n) %}
-        <form action="{{ url_for('index') }}" method="post">
-            <div class="card w-70 bg-base-100 m-5 shadow-xl">
-                <div class="card-body">
-                    {% for name in card.dtypes.index %}
-                        {% if name != id %}
+        <div class="card w-70 bg-base-100 m-5 shadow-xl">
+            <div class="card-body">
+                {% for name in card.dtypes.index %}
+                    {% if name not in id %}
+                        {% if card.loc[i, name] != None %}
                             <p>{{ name }}: <b>{{ card.loc[i, name] }}</b></p>
                         {% endif %}
-                    {% endfor %}
-                    <div class="card-actions justify-end">
-                        <button class="btn btn-outline btn-xs mr-2">
-                            {% if card.loc[i, 'Начал'] == None %}Взять
-                            {% elif card.loc[i, 'Закончил'] == None and card.loc[i, 'Начал'] != None %} Закончить
-                            {% elif card.loc[i, 'Закончил'] != None and card.loc[i, 'Начал'] != None and card.loc[i, 'Проверено'] == 0 %}
-                            {% endif %}</button>
-                    </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="card-actions justify-end">
+                    {% if card.loc[i, 'Работник'] == None %}
+                        <label for="my-modal{{ i }}" class="btn btn-outline mt-2 btn-xs">Назначить работника</label>
+                        <input type="checkbox" id="my-modal{{ i }}" class="modal-toggle"/>
+                        <div class="modal">
+                            <div class="modal-box">
+                                <form action="{{ url_for('index') }}" method="post">
+                                    {{ render_worker(w, len) }}
+                                    <input hidden type="text" name="work_id"
+                                           value="{{ card.loc[i, 'work_id'] }}">
+                                    <input hidden type="text" name="w_iaw"
+                                           value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                                    <div class="modal-action">
+                                        <button for="my-modal{{ i }}" type="submit" class="btn btn-outline btn-xs">
+                                            Назначить работника
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% elif card.loc[i, 'Работник'] != None and card.loc[i, 'Ответственный'] == None %}
+                        <label for="my-modal{{ i }}" class="btn btn-outline mt-2 btn-xs">Назначить
+                            ответственного</label>
+                        <input type="checkbox" id="my-modal{{ i }}" class="modal-toggle"/>
+                        <div class="modal">
+                            <div class="modal-box">
+                                <form action="{{ url_for('index') }}" method="post">
+                                    {{ render_res(w, len) }}
+                                    <input hidden type="text" name="r_iaw"
+                                           value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                                    <div class="modal-action">
+                                        <button for="my-modal{{ i }}" type="submit" class="btn btn-outline btn-xs">
+                                            Назначить ответственного
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% elif card.loc[i, 'Ответственный'] != None and card.loc[i, 'Начал'] == None %}
+                        <form action="{{ url_for('index') }}" method="post">
+                            <input hidden type="text" name="start" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                            <button type="submit" class="btn btn-outline btn-xs">Начать работу</button>
+                        </form>
+                    {% elif card.loc[i, 'Закончил'] == None and card.loc[i, 'Начал'] != None %}
+                        <form action="{{ url_for('index') }}" method="post">
+                            <input hidden type="text" name="end" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                            <button type="submit" class="btn btn-outline btn-xs">Закончить работу</button>
+                        </form>
+                    {% elif card.loc[i, 'Закончил'] != None and card.loc[i, 'Начал'] != None and card.loc[i, 'Проверено'] == 0 %}
+                        <form action="{{ url_for('index') }}" method="post">
+                            <input hidden type="text" name="finish" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                            <button type="submit" class="btn btn-outline btn-xs">Проверить работу</button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
-        </form>
+        </div>
     {% endfor %}
 {% endmacro %}

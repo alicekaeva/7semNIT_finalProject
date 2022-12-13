@@ -55,7 +55,7 @@
         {{ macros.render_secret(issue, id, len) }}
         <button type="submit" class="btn btn-outline btn-xs float-right mb-2 mr-2">Редактировать выпуск</button>
     </form>
-    {{ macros.render_edit_issue(table, 'issue_article_work_id', len) }}
+    {{ macros.render_edit_issue(table, ['issue_article_work_id'], len) }}
 </div>
 </body>
 </html>

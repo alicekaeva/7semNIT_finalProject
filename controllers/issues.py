@@ -11,7 +11,7 @@ def issues():
     if request.values.get('new_issue'):
         new_issue = request.values.get('new_issue')
         new_date = request.values.get('new_date')
-        add_issue(new_issue, new_date, conn)
+        session['id'] = add_issue(new_issue, new_date, conn)
     elif request.values.get('editable'):
         session['editable'] = request.values.get('editable')
         session['editable_id'] = int(request.values.get('editable_id'))
@@ -19,8 +19,7 @@ def issues():
     elif request.values.get('issue'):
         id = int(request.values.get('issue'))
         session['id'] = id
-    else:
-        session['id'] = 1
+
 
     df_issues = get_issues(conn)
     df_table = show_table(session['id'], conn)
