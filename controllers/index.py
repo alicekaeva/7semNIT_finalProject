@@ -1,7 +1,7 @@
 from app import app
-from flask import render_template, request, session
+from flask import render_template, request, session,redirect, url_for
 from utils import get_db_connection
-from models.index_model import show_cards, get_workers, get_responsible, add_worker, add_res
+from models.index_model import show_cards, start, finish, check
 
 
 @app.route('/', methods=['get', 'post'])
@@ -9,24 +9,20 @@ def index():
     conn = get_db_connection()
     df_table = show_cards(conn)
 
-    if request.values.get('worker'):
-        session['worker_id'] = int(request.values.get('worker'))
-        add_worker(request.values.get('w_iaw'), session['worker_id'], conn)
-    elif request.values.get('res'):
-        session['res_id'] = int(request.values.get('res'))
-        add_res(request.values.get('issue_article_work_id'), session['res_id'], conn)
-    else:
-        session['worker_id'] = 1
-        session['work_id'] = 1
+    if request.values.get('start'):
+        start(request.values.get('start'), conn)
+        return redirect(url_for('index'))
+    elif request.values.get('finish'):
+        finish(request.values.get('finish'), conn)
+        return redirect(url_for('index'))
+    elif request.values.get('check'):
+        check(request.values.get('check'), conn)
+        return redirect(url_for('index'))
 
-    df_w = get_workers(session['work_id'], conn)
-    df_r = get_responsible(session['worker_id'], conn)
 
     html = render_template(
         'index.html',
         table=df_table,
-        len=len,
-        w=df_w,
-        r=df_r
+        len=len
     )
     return html
