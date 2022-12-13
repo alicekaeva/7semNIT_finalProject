@@ -1,24 +1,6 @@
 import pandas
 
 
-def get_workers(work_id, conn):
-    return pandas.read_sql('''
-    SELECT * 
-    FROM worker
-    JOIN work_worker USING (worker_id)
-    JOIN work USING (work_id)
-    WHERE work_id = :id
-    ''', conn, params={"id": work_id})
-
-
-def get_responsible(worker_id, conn):
-    return pandas.read_sql('''
-    SELECT *
-    FROM worker
-    WHERE worker_id IS NOT :id
-    ''', conn, params={"id": worker_id})
-
-
 def show_cards(conn):
     return pandas.read_sql('''
     SELECT iaw.issue_article_work_id, iaw.work_id, issue_name AS Выпуск, article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, iaw.start_date AS Начал, iaw.end_date AS Закончил, iaw.checked AS Проверено

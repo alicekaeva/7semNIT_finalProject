@@ -29,7 +29,7 @@ def add_issue_article_work(issue_article, works, conn):
     cur = conn.cursor()
     for item in works:
         cur.execute('''INSERT INTO issue_article_work(issue_article_id, work_id, worker_id, responsible_for_work_id, 
-        start_date, end_date, checked) VALUES (:new_issue_article, :new_work, NULL, NULL, NULL, NULL, NULL)''',
+        start_date, end_date, checked) VALUES (:new_issue_article, :new_work, NULL, NULL, NULL, NULL, 0)''',
                     {"new_issue_article": issue_article, "new_work": item})
     return conn.commit()
 

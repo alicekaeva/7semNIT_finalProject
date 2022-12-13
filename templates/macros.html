@@ -65,7 +65,17 @@
         {% for i in range(n) %}
             <tr>
                 {% for name in relation.dtypes.index %}
-                    {% if name not in id %}
+                    {% if name == 'Проверено' %}
+                        {% if relation.loc[i, 'Проверено'] == 0 %}
+                            <td>
+                                Нет
+                            </td>
+                        {% elif relation.loc[i, 'Проверено'] == 1 %}
+                            <td>
+                                Да
+                            </td>
+                        {% endif %}
+                    {% elif name not in id %}
                         <td>
                             {{ relation.loc[i, name] }}
                         </td>
@@ -77,28 +87,48 @@
     </table>
 {% endmacro %}
 
-{% macro render_worker(workers, len) %}
-    <select name="worker" class="select select-bordered select-sm w-full max-w-xs mb-2" required>
-        <option disabled selected>Работник</option>
-        {% set n = len(workers) %}
-        {% for i in range(n) %}
-            <option value={{ workers.loc[i, "worker_id"] }}>
-                {{ workers.loc[i, "worker_name"] }}
-            </option>
-        {% endfor %}
-    </select>
+{% macro render_worker(workers, c, len) %}
+    <form action="{{ url_for('edit_work') }}" method="post">
+        <select name="worker" class="select select-bordered select-sm w-full max-w-xs mb-2" required
+                {% if c == 1 %} disabled
+                {% endif %}
+        >
+            <option disabled selected>Работник</option>
+            {% set n = len(workers) %}
+            {% for i in range(n) %}
+                <option value={{ workers.loc[i, "worker_id"] }}>
+                    {{ workers.loc[i, "worker_name"] }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-outline btn-xs mb-2 mr-2"
+                {% if c == 1 %} disabled
+                {% endif %}
+        >Назначить
+        </button>
+    </form>
 {% endmacro %}
 
-{% macro render_res(res, len) %}
-    <select name="res" class="select select-bordered select-sm w-full max-w-xs" required>
-        <option disabled selected>Ответственный</option>
-        {% set n = len(res) %}
-        {% for i in range(n) %}
-            <option value={{ res.loc[i, "worker_id"] }}>
-                {{ res.loc[i, "worker_name"] }}
-            </option>
-        {% endfor %}
-    </select>
+{% macro render_res(res, c, len) %}
+    <form action="{{ url_for('edit_work') }}" method="post">
+        <select name="res" class="select select-bordered select-sm w-full max-w-xs" required
+                {% if c == 0 %} disabled
+                {% endif %}
+        >
+            <option disabled selected>Ответственный</option>
+            {% set n = len(res) %}
+            {% for i in range(n) %}
+                <option value={{ res.loc[i, "worker_id"] }}>
+                    {{ res.loc[i, "worker_name"] }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-outline btn-xs mb-2 mr-2"
+                {% if c == 0 %} disabled
+                {% endif %}
+        >Назначить
+        </button>
+    </form>
 {% endmacro %}
 
 {% macro render_cards(card, id, len) %}
@@ -108,13 +138,13 @@
             <div class="card-body">
                 {% for name in card.dtypes.index %}
                     {% if name not in id %}
-                        {% if card.loc[i, name] != None %}
+                        {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
                             <p>{{ name }}: <b>{{ card.loc[i, name] }}</b></p>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
                 <div class="card-actions justify-end">
-                    {% if card.loc[i, 'Начал'] == None and card.loc[i, 'Ответственный'] != None%}
+                    {% if card.loc[i, 'Начал'] == None and card.loc[i, 'Ответственный'] != None %}
                         <form action="{{ url_for('index') }}" method="post">
                             <input hidden type="text" name="start" value="{{ card.loc[i, 'issue_article_work_id'] }}">
                             <button type="submit" class="btn btn-outline btn-xs">Начать работу</button>
@@ -130,8 +160,9 @@
                             <button type="submit" class="btn btn-outline btn-xs">Проверить работу</button>
                         </form>
                     {% else %}
-                        <form action="{{ url_for('edit_work') }}" method="post">
-                            <input hidden type="text" name="check" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                        <form action="{{ url_for('index') }}" method="post">
+                            <input hidden type="text" name="iaw_id" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                            <input hidden type="text" name="w_id" value="{{ card.loc[i, 'work_id'] }}">
                             <button type="submit" class="btn btn-outline btn-xs">Назначить</button>
                         </form>
                     {% endif %}
