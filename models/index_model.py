@@ -11,7 +11,7 @@ def show_cards(conn):
     JOIN work USING (work_id)
     LEFT JOIN worker AS w ON iaw.worker_id = w.worker_id
     LEFT JOIN worker AS r ON iaw.responsible_for_work_id = r.worker_id
-    WHERE checked = 0 OR checked is NULL
+    WHERE checked = 0 and deadline > date('now')
     ''', conn)
 
 

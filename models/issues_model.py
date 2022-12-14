@@ -5,6 +5,14 @@ def get_issues(conn):
     return pandas.read_sql('SELECT * FROM issue', conn)
 
 
+def show_dealine(id, conn):
+    return pandas.read_sql('''
+    SELECT deadline
+    FROM issue
+    WHERE issue_id = :id
+    ''', conn, params={"id": id})
+
+
 def add_issue(name, date, conn):
     cur = conn.cursor()
     cur.execute('INSERT INTO issue(issue_name, deadline) VALUES (:new_issue, :new_date)',
