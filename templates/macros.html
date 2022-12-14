@@ -139,7 +139,7 @@
                 {% for name in card.dtypes.index %}
                     {% if name not in id %}
                         {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
-                            <p>{{ name }}: <b>{{ card.loc[i, name] }}</b></p>
+                            <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
