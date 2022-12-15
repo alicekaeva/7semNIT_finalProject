@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, request, session, redirect, url_for
 from utils import get_db_connection
-from models.issues_model import get_issues, add_issue, show_table, show_dealine
+from models.issues_model import get_issues, add_issue, show_table, show_deadline
 import datetime
 
 
@@ -24,11 +24,10 @@ def issues():
 
     df_issues = get_issues(conn)
     df_table = show_table(session['id'], conn)
-    deadline = show_dealine(session['id'], conn).loc[0, "deadline"]
+    deadline = show_deadline(session['id'], conn).loc[0, "deadline"]
 
     if deadline < str(datetime.datetime.now().date()):
         check = 1
-    print(check)
 
     html = render_template(
         'issues.html',

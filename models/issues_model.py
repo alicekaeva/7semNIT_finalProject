@@ -5,7 +5,7 @@ def get_issues(conn):
     return pandas.read_sql('SELECT * FROM issue', conn)
 
 
-def show_dealine(id, conn):
+def show_deadline(id, conn):
     return pandas.read_sql('''
     SELECT deadline
     FROM issue
