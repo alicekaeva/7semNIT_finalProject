@@ -7,3 +7,7 @@ import controllers.issues
 import controllers.index
 import controllers.edit_issue
 import controllers.edit_work
+import controllers.login
+import controllers.logout
+import controllers.index_worker
+import controllers.index_responsible

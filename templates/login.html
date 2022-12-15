@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.42.1/dist/full.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="flex flex-col justify-center items-center mt-10">
+    <form action="{{ url_for('login') }}" method="post">
+        <div class="form-control">
+            <label class="label cursor-pointer">
+                <input type="radio" name="admin" class="radio checked:bg-red-500"/>
+                <span class="label-text">Админ</span>
+            </label>
+        </div>
+        <div class="form-control">
+            <label class="label cursor-pointer">
+                <input type="radio" name="worker" class="radio checked:bg-blue-500"
+                        {% if flag == 1 %}
+                       checked
+                        {% endif %}
+                />
+                <span class="label-text">Работник</span>
+            </label>
+        </div>
+        <div class="form-control">
+            <label class="label cursor-pointer">
+                <input type="radio" name="responsible" class="radio checked:bg-yellow-500"
+                {% if flag == 2 %}
+                       checked
+                        {% endif %}
+                />
+                <span class="label-text ml-2">Ответственный</span>
+            </label>
+        </div>
+        {% if flag == 1 or flag == 2%}
+            <input type="text" placeholder="ФИО"
+                   class="input input-bordered w-full max-w-xs mb-2"
+                   name="name" required/>
+        {% endif %}
+        <button type="submit" class="btn btn-outline w-full btn-xs">Войти</button>
+    </form>
+</div>
+</body>
+</html>

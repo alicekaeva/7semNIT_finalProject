@@ -2,7 +2,7 @@
 <html lang="en" data-theme="cupcake">
 <head>
     <meta charset="UTF-8">
-    <title>Выпуски</title>
+    <title>Назначить</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.42.1/dist/full.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
     {% import "macros.html" as macros %}
@@ -27,6 +27,7 @@
         <a href={{ url_for("index") }} class="btn btn-ghost normal-case text-xl">Активные работы</a>
     </div>
     <div class="navbar-end">
+        <a href={{ url_for('logout') }} class="btn btn-outline btn-xs">Выйти</a>
     </div>
 </div>
 {{ macros.render_worker(worker, flag, len) }}

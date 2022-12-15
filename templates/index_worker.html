@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+<head>
+    <meta charset="UTF-8">
+    <title>Активные работы</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.42.1/dist/full.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% import "macros.html" as macros %}
+</head>
+<body>
+<div class="navbar bg-base-100">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-center">
+        <a class="btn btn-ghost normal-case text-xl">Активные работы</a>
+    </div>
+    <div class="navbar-end">
+        <a href={{ url_for('logout') }} class="btn btn-outline btn-xs">Выйти</a>
+    </div>
+</div>
+<div class="flex flex-wrap ml-2 mr-2">
+    {{ macros.render_cards_worker(table, ['issue_article_work_id', 'work_id'], len) }}
+</div>
+</body>
+</html>
