@@ -53,15 +53,29 @@
 <div class="overflow-x-auto mt-2">
     <form action="{{ url_for('issues') }}" method="get">
         <select name="filter" class="select select-bordered w-full max-w-xs mt-2" required>
-            <option value="1">Неназначенные работы</option>
-            <option value="2">Начатые работы</option>
-            <option value="3">Непроверенные работы</option>
+            <option value="1"
+                    {% if filter == 1 %}
+                    selected
+                    {% endif %}
+            >Неназначенные работы
+            </option>
+            <option value="2"
+                    {% if filter == 2 %}
+                    selected
+                    {% endif %}
+            >Начатые работы
+            </option>
+            <option value="3"
+                    {% if filter == 3 %}
+                    selected
+                    {% endif %}
+            >Непроверенные работы
+            </option>
         </select>
         <button type="submit" class="btn btn-outline btn-xl ml-2">Показать</button>
     </form>
     <form action="{{ url_for('issues') }}" method="post">
         {{ macros.render_secret(issue, id, len) }}
-        <label class="text-red-600">Cрок сдачи всех работ до {{ deadline }}</label>
         <button type="submit" class="btn btn-outline btn-xs float-right mb-2 mr-2"
                 {% if flag == 1 %}
                 disabled

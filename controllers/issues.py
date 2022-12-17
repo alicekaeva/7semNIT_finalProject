@@ -9,9 +9,7 @@ import datetime
 def issues():
     conn = get_db_connection()
     check = 0
-    f1 = 0
-    f2 = 0
-    f3 = 0
+    session['flag'] = 0
 
     if request.values.get('new_issue'):
         new_issue = request.values.get('new_issue')
@@ -26,13 +24,13 @@ def issues():
         session['id'] = id
     elif request.values.get('filter'):
         if int(request.values.get('filter')) == 1:
-            f1 = 1
+            session['flag'] = 1
         elif int(request.values.get('filter')) == 2:
-            f2 = 1
+            session['flag'] = 2
         elif int(request.values.get('filter')) == 3:
-            f3 = 1
+            session['flag'] = 3
     df_issues = get_issues(conn)
-    df_table = show_table(session['id'], f1, f2, f3,conn)
+    df_table = show_table(session['id'], session['flag'],conn)
     deadline = show_deadline(session['id'], conn).loc[0, "deadline"]
 
     if deadline < str(datetime.datetime.now().date()):
@@ -44,6 +42,7 @@ def issues():
         issue=df_issues,
         table=df_table,
         id=session['id'],
+        filter=session['flag'],
         flag=check,
         deadline=deadline
     )

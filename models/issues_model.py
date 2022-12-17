@@ -21,8 +21,8 @@ def add_issue(name, date, conn):
     return cur.lastrowid
 
 
-def show_table(id, f1, f2, f3, conn):
-    if f1 == 1:
+def show_table(id, flag, conn):
+    if flag == 1:
         return pandas.read_sql(f'''
         SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Проверено
         FROM issue_article_work AS iaw
@@ -34,7 +34,7 @@ def show_table(id, f1, f2, f3, conn):
         JOIN work USING (work_id)
         WHERE issue_id = :id AND w.worker_id IS NULL 
         ''', conn, params={"id": id})
-    elif f2 == 1:
+    elif flag == 2:
         return pandas.read_sql(f'''
         SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Проверено
         FROM issue_article_work AS iaw
@@ -46,7 +46,7 @@ def show_table(id, f1, f2, f3, conn):
         JOIN work USING (work_id)
         WHERE issue_id = :id AND start_date IS NOT NULL and end_date IS NULL
         ''', conn, params={"id": id})
-    elif f3 == 1:
+    elif flag == 3:
         return pandas.read_sql(f'''
         SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Проверено
         FROM issue_article_work AS iaw

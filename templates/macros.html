@@ -8,7 +8,7 @@
                     {% else %}
                 <option value={{ id_r }}>
             {% endif %}
-        {{ combo_box.loc[i, "issue_name"] }}
+        {{ combo_box.loc[i, "issue_name"] }} ({{ combo_box.loc[i, "deadline"] }})
         </option>
         {% endfor %}
     </select>
