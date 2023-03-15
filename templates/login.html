@@ -28,19 +28,31 @@
         <div class="form-control">
             <label class="label cursor-pointer">
                 <input type="radio" name="responsible" class="radio checked:bg-yellow-500"
-                {% if flag == 2 %}
+                        {% if flag == 2 %}
                        checked
                         {% endif %}
                 />
                 <span class="label-text ml-2">Ответственный</span>
             </label>
         </div>
-        {% if flag == 1 or flag == 2%}
+        {% if flag == 1 or flag == 2 %}
             <input type="text" placeholder="ФИО"
                    class="input input-bordered w-full max-w-xs mb-2"
                    name="name" required/>
         {% endif %}
         <button type="submit" class="btn btn-outline w-full btn-xs">Войти</button>
+        {% if messasge == 1 %}
+            <div class="alert alert-error shadow-lg mt-5">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Ошибка! Такого пользователя нет в системе</span>
+                </div>
+            </div>
+        {% endif %}
     </form>
 </div>
 </body>

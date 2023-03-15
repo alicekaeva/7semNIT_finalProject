@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, request, session, redirect, url_for
 from utils import get_db_connection
-from models.issues_model import get_issues, add_issue, show_table, show_deadline
+from models.issues_model import get_issues, add_issue, show_table, show_deadline, current_issue
 import datetime
 
 
@@ -10,6 +10,8 @@ def issues():
     conn = get_db_connection()
     check = 0
     session['flag'] = 0
+    if not session.get('id'):
+        session['id'] = int(current_issue(conn).loc[0, "issue_id"])
 
     if request.values.get('new_issue'):
         new_issue = request.values.get('new_issue')

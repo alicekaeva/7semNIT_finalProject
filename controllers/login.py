@@ -7,6 +7,7 @@ from utils import get_db_connection
 @app.route('/login', methods=['get', 'post'])
 def login():
     check = 0
+    err = 0
     conn = get_db_connection()
 
     if request.values.get('admin'):
@@ -19,12 +20,18 @@ def login():
         session['responsible'] = request.form.get('responsible')
         check = 2
     elif request.values.get('worker') and request.values.get('name'):
-        worker_id = int(get_worker(request.values.get('name'), conn).loc[0, "worker_id"])
-        session['worker'] = worker_id
-        return redirect(url_for('index_worker'))
+        try:
+            worker_id = int(get_worker(request.values.get('name'), conn).loc[0, "worker_id"])
+            session['worker'] = worker_id
+            return redirect(url_for('index_worker'))
+        except KeyError:
+            err = 1
     elif request.values.get('responsible') and request.values.get('name'):
-        responsible_id = int(get_worker(request.values.get('name'), conn).loc[0, "worker_id"])
-        session['responsible'] = responsible_id
-        return redirect(url_for('index_responsible'))
+        try:
+            responsible_id = int(get_worker(request.values.get('name'), conn).loc[0, "worker_id"])
+            session['responsible'] = responsible_id
+            return redirect(url_for('index_responsible'))
+        except KeyError:
+            err = 1
 
-    return render_template('login.html', flag=check)
+    return render_template('login.html', flag=check, messasge=err)

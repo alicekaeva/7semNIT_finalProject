@@ -4,6 +4,11 @@ import pandas
 def get_issues(conn):
     return pandas.read_sql('SELECT * FROM issue', conn)
 
+def current_issue(conn):
+    return pandas.read_sql('''
+    SELECT issue_id FROM issue WHERE strftime('%m', deadline) = strftime('%m', date('now'))
+    ''', conn)
+
 
 def show_deadline(id, conn):
     return pandas.read_sql('''
