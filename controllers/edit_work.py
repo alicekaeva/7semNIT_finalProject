@@ -10,7 +10,10 @@ def edit_work():
     iaw_id = session.get('iaw_id')
     w_id = session.get('w_id')
     df_w = get_workers(w_id, conn)
-    df_r = get_responsible(session['worker'], conn)
+    try:
+        df_r = get_responsible(session['worker'], conn)
+    except KeyError:
+        df_r = get_responsible(1, conn)
 
     if request.values.get('worker'):
         session['worker'] = int(request.values.get('worker'))
