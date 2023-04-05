@@ -171,9 +171,23 @@
                 {% endfor %}
                 {% if card.loc[i, 'Закончил'] != None %}
                     <div class="card-actions justify-end">
+                        <div class="dropdown dropdown-bottom">
+                            <label tabindex="0" class="btn btn-outline btn-xs mr-20">Есть замечания</label>
+                            <div tabindex="0"
+                                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box mt-10 w-fit">
+                                <form action="{{ url_for('index_responsible') }}" method="post">
+                                    <input hidden type="text" name="id"
+                                           value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                                    <input type="text" placeholder="Введите комментарий"
+                                           class="input input-bordered w-fit max-w-xs mb-2"
+                                           name="mistakes" required/>
+                                    <button type="submit" class="btn btn-outline btn-xs">Отдать на доработку</button>
+                                </form>
+                            </div>
+                        </div>
                         <form action="{{ url_for('index_responsible') }}" method="post">
-                            <input hidden type="text" name="check" value="{{ card.loc[i, 'issue_article_work_id'] }}">
-                            <button type="submit" class="btn btn-outline btn-xs">Проверить работу</button>
+                            <input hidden type="text" name="ok" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                            <button type="submit" class="btn btn-outline btn-xs">Нет замечаний</button>
                         </form>
                     </div>
                 {% endif %}

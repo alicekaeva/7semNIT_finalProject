@@ -23,7 +23,7 @@ def finish(iaw_id, conn):
 
 def show_cards(id, conn):
     return pandas.read_sql('''
-    SELECT iaw.issue_article_work_id, iaw.work_id, issue_name AS Выпуск, article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, iaw.start_date AS Начал, iaw.end_date AS Закончил, iaw.checked AS Проверено
+    SELECT iaw.issue_article_work_id, iaw.work_id, issue_name AS Выпуск, article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, iaw.comment AS Замечание, iaw.start_date AS Начал, iaw.end_date AS Закончил, iaw.checked AS Проверено
     FROM issue_article_work AS iaw
     JOIN issue_article USING (issue_article_id)
     JOIN issue USING (issue_id)
