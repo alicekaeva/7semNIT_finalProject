@@ -76,9 +76,15 @@
                             </td>
                         {% endif %}
                     {% elif name not in id %}
-                        <td>
-                            {{ relation.loc[i, name] }}
-                        </td>
+                        {% if relation.loc[i, name] != None and relation.loc[i, name] != 0 %}
+                            <td>
+                                {{ relation.loc[i, name] }}
+                            </td>
+                        {% else %}
+                            <td>
+                                –
+                            </td>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </tr>
@@ -132,98 +138,114 @@
 {% endmacro %}
 
 {% macro render_cards(card, id, len) %}
-    {% set n = len(card) %}
-    {% for i in range(n) %}
-        <div class="card w-70 bg-base-100 m-5 shadow-xl">
-            <div class="card-body">
-                {% for name in card.dtypes.index %}
-                    {% if name not in id %}
-                        {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
-                            <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+    <div class="grid grid-cols-3 gap-4">
+        {% set n = len(card) %}
+        {% for i in range(n) %}
+            <div class="card w-70 bg-base-100 m-5 shadow-xl">
+                <div class="card-body">
+                    {% for name in card.dtypes.index %}
+                        {% if name not in id %}
+                            {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
+                                <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+                            {% else %}
+                                <label>{{ name }}: <b>–</b></label>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-                {% if card.loc[i, 'Работник'] == None and card.loc[i, 'Ответственный'] == None %}
+                    {% endfor %}
+
                     <div class="card-actions justify-end">
                         <form action="{{ url_for('index') }}" method="post">
-                            <input hidden type="text" name="iaw_id" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                            <input hidden type="text" name="iaw_id"
+                                   value="{{ card.loc[i, 'issue_article_work_id'] }}">
                             <input hidden type="text" name="w_id" value="{{ card.loc[i, 'work_id'] }}">
-                            <button type="submit" class="btn btn-outline btn-xs">Назначить</button>
+                            <button type="submit" class="btn btn-outline btn-xs"
+                                    {% if card.loc[i, 'Работник'] == None and card.loc[i, 'Ответственный'] == None %}
+                                    disabled
+                                    {% endif %}
+                            >Назначить
+                            </button>
                         </form>
                     </div>
-                {% endif %}
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endmacro %}
 
 {% macro render_cards_responsible(card, id, len) %}
-    {% set n = len(card) %}
-    {% for i in range(n) %}
-        <div class="card w-70 bg-base-100 m-5 shadow-xl">
-            <div class="card-body">
-                {% for name in card.dtypes.index %}
-                    {% if name not in id %}
-                        {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
-                            <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+    <div class="grid grid-cols-3 gap-4">
+        {% set n = len(card) %}
+        {% for i in range(n) %}
+            <div class="card w-70 bg-base-100 m-5 shadow-xl">
+                <div class="card-body">
+                    {% for name in card.dtypes.index %}
+                        {% if name not in id %}
+                            {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
+                                <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-                {% if card.loc[i, 'Закончил'] != None %}
-                    <div class="card-actions justify-end">
-                        <div class="dropdown dropdown-bottom">
-                            <label tabindex="0" class="btn btn-outline btn-xs mr-20">Есть замечания</label>
-                            <div tabindex="0"
-                                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box mt-10 w-fit">
-                                <form action="{{ url_for('index_responsible') }}" method="post">
-                                    <input hidden type="text" name="id"
-                                           value="{{ card.loc[i, 'issue_article_work_id'] }}">
-                                    <input type="text" placeholder="Введите комментарий"
-                                           class="input input-bordered w-fit max-w-xs mb-2"
-                                           name="mistakes" required/>
-                                    <button type="submit" class="btn btn-outline btn-xs">Отдать на доработку</button>
-                                </form>
+                    {% endfor %}
+                    {% if card.loc[i, 'Закончил'] != None %}
+                        <div class="card-actions justify-between">
+                            <div class="dropdown dropdown-bottom">
+                                <label tabindex="0" class="btn btn-outline btn-xs">Есть замечания</label>
+                                <div tabindex="0"
+                                     class="dropdown-content menu p-2 shadow bg-base-100 rounded-box mt-10 w-fit">
+                                    <form action="{{ url_for('index_responsible') }}" method="post">
+                                        <input hidden type="text" name="id"
+                                               value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                                        <input type="text" placeholder="Введите комментарий"
+                                               class="input input-bordered w-fit max-w-xs mb-2"
+                                               name="mistakes" required/>
+                                        <button type="submit" class="btn btn-outline btn-xs">Отдать на доработку
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
+                            <form action="{{ url_for('index_responsible') }}" method="post">
+                                <input hidden type="text" name="ok" value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                                <button type="submit" class="btn btn-outline btn-xs">Нет замечаний</button>
+                            </form>
                         </div>
-                        <form action="{{ url_for('index_responsible') }}" method="post">
-                            <input hidden type="text" name="ok" value="{{ card.loc[i, 'issue_article_work_id'] }}">
-                            <button type="submit" class="btn btn-outline btn-xs">Нет замечаний</button>
-                        </form>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endmacro %}
 
 {% macro render_cards_worker(card, id, len) %}
-    {% set n = len(card) %}
-    {% for i in range(n) %}
-        <div class="card w-70 bg-base-100 m-5 shadow-xl">
-            <div class="card-body">
-                {% for name in card.dtypes.index %}
-                    {% if name not in id %}
-                        {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
-                            <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+    <div class="grid grid-cols-3 gap-4">
+        {% set n = len(card) %}
+        {% for i in range(n) %}
+            <div class="card w-70 bg-base-100 m-5 shadow-xl">
+                <div class="card-body">
+                    {% for name in card.dtypes.index %}
+                        {% if name not in id %}
+                            {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
+                                <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+                            {% endif %}
                         {% endif %}
+                    {% endfor %}
+                    {% if card.loc[i, 'Начал'] == None and card.loc[i, 'Ответственный'] != None %}
+                        <div class="card-actions justify-end">
+                            <form action="{{ url_for('index_worker') }}" method="post">
+                                <input hidden type="text" name="start"
+                                       value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                                <button type="submit" class="btn btn-outline btn-xs">Начать работу</button>
+                            </form>
+                        </div>
+                    {% elif card.loc[i, 'Закончил'] == None and card.loc[i, 'Начал'] != None %}
+                        <div class="card-actions justify-end">
+                            <form action="{{ url_for('index_worker') }}" method="post">
+                                <input hidden type="text" name="finish"
+                                       value="{{ card.loc[i, 'issue_article_work_id'] }}">
+                                <button type="submit" class="btn btn-outline btn-xs">Закончить работу</button>
+                            </form>
+                        </div>
                     {% endif %}
-                {% endfor %}
-                {% if card.loc[i, 'Начал'] == None and card.loc[i, 'Ответственный'] != None %}
-                    <div class="card-actions justify-end">
-                        <form action="{{ url_for('index_worker') }}" method="post">
-                            <input hidden type="text" name="start" value="{{ card.loc[i, 'issue_article_work_id'] }}">
-                            <button type="submit" class="btn btn-outline btn-xs">Начать работу</button>
-                        </form>
-                    </div>
-                {% elif card.loc[i, 'Закончил'] == None and card.loc[i, 'Начал'] != None %}
-                    <div class="card-actions justify-end">
-                        <form action="{{ url_for('index_worker') }}" method="post">
-                            <input hidden type="text" name="finish" value="{{ card.loc[i, 'issue_article_work_id'] }}">
-                            <button type="submit" class="btn btn-outline btn-xs">Закончить работу</button>
-                        </form>
-                    </div>
-                {% endif %}
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endmacro %}
