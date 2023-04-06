@@ -66,13 +66,17 @@
             <tr>
                 {% for name in relation.dtypes.index %}
                     {% if name == 'Проверено' %}
-                        {% if relation.loc[i, 'Проверено'] == 0 %}
+                        {% if relation.loc[i, 'Проверено'] == 0 and relation.loc[i, 'Закончил'] != None %}
                             <td>
                                 Нет
                             </td>
                         {% elif relation.loc[i, 'Проверено'] == 1 %}
                             <td>
                                 Да
+                            </td>
+                         {% elif relation.loc[i, 'Проверено'] == 0 and relation.loc[i, 'Закончил'] == None %}
+                            <td>
+                                –
                             </td>
                         {% endif %}
                     {% elif name not in id %}
@@ -159,7 +163,7 @@
                                    value="{{ card.loc[i, 'issue_article_work_id'] }}">
                             <input hidden type="text" name="w_id" value="{{ card.loc[i, 'work_id'] }}">
                             <button type="submit" class="btn btn-outline btn-xs"
-                                    {% if card.loc[i, 'Работник'] == None and card.loc[i, 'Ответственный'] == None %}
+                                    {% if card.loc[i, 'Работник'] != None and card.loc[i, 'Ответственный'] != None %}
                                     disabled
                                     {% endif %}
                             >Назначить
@@ -182,6 +186,8 @@
                         {% if name not in id %}
                             {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
                                 <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+                            {% else %}
+                                <label>{{ name }}: <b>–</b></label>
                             {% endif %}
                         {% endif %}
                     {% endfor %}
@@ -224,6 +230,8 @@
                         {% if name not in id %}
                             {% if card.loc[i, name] != None and card.loc[i, name] != 0 %}
                                 <label>{{ name }}: <b>{{ card.loc[i, name] }}</b></label>
+                            {% else %}
+                                <label>{{ name }}: <b>–</b></label>
                             {% endif %}
                         {% endif %}
                     {% endfor %}
