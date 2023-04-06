@@ -10,23 +10,21 @@ def login():
     err = 0
     conn = get_db_connection()
 
-    if request.values.get('admin'):
-        session['admin'] = request.form.get('admin')
+    if request.values.get('role') == 'admin':
+        session['admin'] = 'admin'
         return redirect(url_for('index'))
-    elif request.values.get('worker') and not request.values.get('name'):
-        session['worker'] = request.form.get('worker')
+    elif request.values.get('role') == 'worker' and not request.values.get('name'):
         check = 1
-    elif request.values.get('responsible') and not request.values.get('name'):
-        session['responsible'] = request.form.get('responsible')
+    elif request.values.get('role') == 'responsible' and not request.values.get('name'):
         check = 2
-    elif request.values.get('worker') and request.values.get('name'):
+    elif request.values.get('role') == 'worker' and request.values.get('name'):
         try:
             worker_id = int(get_worker(request.values.get('name'), conn).loc[0, "worker_id"])
             session['worker'] = worker_id
             return redirect(url_for('index_worker'))
         except KeyError:
             err = 1
-    elif request.values.get('responsible') and request.values.get('name'):
+    elif request.values.get('role') == 'responsible' and request.values.get('name'):
         try:
             responsible_id = int(get_worker(request.values.get('name'), conn).loc[0, "worker_id"])
             session['responsible'] = responsible_id
