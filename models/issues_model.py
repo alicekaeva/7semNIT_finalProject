@@ -29,7 +29,7 @@ def add_issue(name, date, conn):
 def show_table(id, flag, conn):
     if flag == 1:
         return pandas.read_sql(f'''
-        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Проверено
+        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Готово
         FROM issue_article_work AS iaw
         LEFT JOIN worker AS w ON iaw.worker_id = w.worker_id
         LEFT JOIN worker AS r ON iaw.responsible_for_work_id = r.worker_id
@@ -41,7 +41,7 @@ def show_table(id, flag, conn):
         ''', conn, params={"id": id})
     elif flag == 2:
         return pandas.read_sql(f'''
-        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Проверено
+        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Готово
         FROM issue_article_work AS iaw
         LEFT JOIN worker AS w ON iaw.worker_id = w.worker_id
         LEFT JOIN worker AS r ON iaw.responsible_for_work_id = r.worker_id
@@ -53,7 +53,7 @@ def show_table(id, flag, conn):
         ''', conn, params={"id": id})
     elif flag == 3:
         return pandas.read_sql(f'''
-        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Проверено
+        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Готово
         FROM issue_article_work AS iaw
         LEFT JOIN worker AS w ON iaw.worker_id = w.worker_id
         LEFT JOIN worker AS r ON iaw.responsible_for_work_id = r.worker_id
@@ -65,7 +65,7 @@ def show_table(id, flag, conn):
         ''', conn, params={"id": id})
     else:
         return pandas.read_sql(f'''
-        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Проверено
+        SELECT article_name AS Статья, work_name AS Работа, w.worker_name AS Работник, r.worker_name AS Ответственный, start_date AS Начал, end_date AS Закончил, checked AS Готово
         FROM issue_article_work AS iaw
         LEFT JOIN worker AS w ON iaw.worker_id = w.worker_id
         LEFT JOIN worker AS r ON iaw.responsible_for_work_id = r.worker_id

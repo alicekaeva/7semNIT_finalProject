@@ -11,3 +11,4 @@ import controllers.login
 import controllers.logout
 import controllers.index_worker
 import controllers.index_responsible
+import controllers.history

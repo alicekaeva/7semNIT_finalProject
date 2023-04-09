@@ -17,6 +17,9 @@ def index():
         session['w_id'] = int(request.values.get('w_id'))
         session['check'] = 0
         return redirect(url_for('edit_work'))
+    if request.values.get('iaw_id_history'):
+        session['iaw_id'] = int(request.values.get('iaw_id_history'))
+        return redirect(url_for('history'))
 
     html = render_template(
         'index.html',
