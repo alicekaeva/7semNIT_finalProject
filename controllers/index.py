@@ -24,6 +24,7 @@ def index():
     html = render_template(
         'index.html',
         table=df_table,
-        len=len
+        len=len,
+        user='admin'
     )
     return html

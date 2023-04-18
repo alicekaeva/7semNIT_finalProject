@@ -1,7 +1,8 @@
 from app import app
 from flask import render_template, request, redirect, url_for, session
 from utils import get_db_connection
-from models.index_worker_model import start, finish, show_cards
+from models.index_worker_model import start, finish
+from models.index_model import show_cards
 
 
 @app.route('/worker', methods=['get', 'post'])
@@ -10,7 +11,7 @@ def index_worker():
         return redirect(url_for('login'))
 
     conn = get_db_connection()
-    df_table = show_cards(session['worker'], conn)
+    df_table = show_cards(conn, worker=session['worker'])
 
     if request.values.get('start'):
         start(request.values.get('start'), conn)
@@ -20,8 +21,9 @@ def index_worker():
         return redirect(url_for('index_worker'))
 
     html = render_template(
-        'index_worker.html',
+        'index.html',
         len=len,
-        table=df_table
+        table=df_table,
+        user='worker'
     )
     return html

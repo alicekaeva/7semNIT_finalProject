@@ -1,7 +1,8 @@
 from app import app
 from flask import render_template, request, redirect, url_for, session
 from utils import get_db_connection
-from models.index_responsible_model import check, show_cards, mistakes, add_to_history
+from models.index_responsible_model import check, mistakes, add_to_history
+from models.index_model import show_cards
 
 
 @app.route('/responsible', methods=['get', 'post'])
@@ -10,7 +11,7 @@ def index_responsible():
         return redirect(url_for('login'))
 
     conn = get_db_connection()
-    df_table = show_cards(session['responsible'], conn)
+    df_table = show_cards(conn, responsible=session['responsible'])
 
     if request.values.get('ok'):
         check(request.values.get('ok'), conn)
@@ -22,8 +23,9 @@ def index_responsible():
         return redirect(url_for('index_responsible'))
 
     html = render_template(
-        'index_responsible.html',
+        'index.html',
         len=len,
-        table=df_table
+        table=df_table,
+        user='responsible'
     )
     return html

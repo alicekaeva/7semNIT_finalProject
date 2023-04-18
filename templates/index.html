@@ -10,6 +10,7 @@
 <body>
 <div class="navbar bg-base-100">
     <div class="navbar-start">
+        {% if user == 'admin' %}
         <div class="dropdown">
             <label tabindex="0" class="btn btn-ghost btn-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -22,6 +23,7 @@
                 <li><a href={{ url_for("issues") }}>Выпуски</a></li>
             </ul>
         </div>
+        {% endif %}
     </div>
     <div class="navbar-center">
         <a href={{ url_for("index") }} class="btn btn-ghost normal-case text-xl">Активные работы</a>
@@ -31,7 +33,7 @@
     </div>
 </div>
 <div class="flex flex-wrap ml-2 mr-2">
-    {{ macros.render_cards(table, ['issue_article_work_id', 'work_id'], len) }}
+    {{ macros.render_cards(table, ['issue_article_work_id', 'work_id'], len, user) }}
 </div>
 </body>
 </html>
